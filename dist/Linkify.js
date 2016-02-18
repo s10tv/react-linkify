@@ -1,16 +1,10 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -24,21 +18,54 @@ var _tlds = require('tlds');
 
 var _tlds2 = _interopRequireDefault(_tlds);
 
-var linkify = new _linkifyIt2['default']();
-linkify.tlds(_tlds2['default']);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Linkify = (function (_React$Component) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var linkify = new _linkifyIt2.default();
+linkify.tlds(_tlds2.default);
+linkify.add('@', {
+  validate: function validate(text, pos, self) {
+    var tail = text.slice(pos);
+
+    if (!self.re.twitter) {
+      self.re.twitter = new RegExp('^([a-zA-Z0-9_]){1,254}(?!_)(?=$|' + self.re.src_ZPCc + ')');
+    }
+    if (self.re.twitter.test(tail)) {
+      // Linkifier allows punctuation chars before prefix,
+      // but we additionally disable `@` ("@@mention" is invalid)
+      if (pos >= 2 && tail[pos - 2] === '@') {
+        return false;
+      }
+      return tail.match(self.re.twitter)[0].length;
+    }
+    return 0;
+  },
+  normalize: function normalize(match) {
+    match.url = 'tc://' + match.url.replace(/^@/, 'users/');
+  }
+});
+
+var Linkify = function (_React$Component) {
+  _inherits(Linkify, _React$Component);
+
   function Linkify() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, Linkify);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
 
-    this.parseCounter = 0;
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Linkify)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.parseCounter = 0, _temp), _possibleConstructorReturn(_this, _ret);
   }
-
-  _inherits(Linkify, _React$Component);
 
   _createClass(Linkify, [{
     key: 'getMatches',
@@ -82,7 +109,7 @@ var Linkify = (function (_React$Component) {
 
             props[key] = val;
           }
-          elements.push(_react2['default'].createElement(this.props.component, props, match.text));
+          elements.push(_react2.default.createElement(this.props.component, props, match.text));
           lastIndex = match.lastIndex;
         }
       } catch (err) {
@@ -90,8 +117,8 @@ var Linkify = (function (_React$Component) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator['return']) {
-            _iterator['return']();
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
           }
         } finally {
           if (_didIteratorError) {
@@ -109,17 +136,17 @@ var Linkify = (function (_React$Component) {
   }, {
     key: 'parse',
     value: function parse(children) {
-      var _this = this;
+      var _this2 = this;
 
       var parsed = children;
 
       if (typeof children === 'string') {
         parsed = this.parseString(children);
-      } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
-        parsed = _react2['default'].cloneElement(children, { key: 'parse' + ++this.parseCounter }, this.parse(children.props.children));
+      } else if (_react2.default.isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
+        parsed = _react2.default.cloneElement(children, { key: 'parse' + ++this.parseCounter }, this.parse(children.props.children));
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
-          return _this.parse(child);
+          return _this2.parse(child);
         });
       }
 
@@ -131,35 +158,26 @@ var Linkify = (function (_React$Component) {
       this.parseCounter = 0;
       var parsedChildren = this.parse(this.props.children);
 
-      return _react2['default'].createElement(
+      return _react2.default.createElement(
         'span',
         { className: 'Linkify' },
         parsedChildren
       );
     }
-  }], [{
-    key: 'MATCH',
-    value: 'LINKIFY_MATCH',
-    enumerable: true
-  }, {
-    key: 'propTypes',
-    value: {
-      component: _react2['default'].PropTypes.any,
-      properties: _react2['default'].PropTypes.object,
-      urlRegex: _react2['default'].PropTypes.object,
-      emailRegex: _react2['default'].PropTypes.object
-    },
-    enumerable: true
-  }, {
-    key: 'defaultProps',
-    value: {
-      component: 'a',
-      properties: {} },
-    enumerable: true
   }]);
 
   return Linkify;
-})(_react2['default'].Component);
+}(_react2.default.Component);
 
-exports['default'] = Linkify;
-module.exports = exports['default'];
+Linkify.MATCH = 'LINKIFY_MATCH';
+Linkify.propTypes = {
+  component: _react2.default.PropTypes.any,
+  properties: _react2.default.PropTypes.object,
+  urlRegex: _react2.default.PropTypes.object,
+  emailRegex: _react2.default.PropTypes.object
+};
+Linkify.defaultProps = {
+  component: 'a',
+  properties: {}
+};
+exports.default = Linkify;
