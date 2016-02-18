@@ -1,6 +1,10 @@
 # [react-linkify](http://tasti.github.io/react-linkify/)
 React component to parse links (urls, emails, etc.) in text into clickable links
 
+## S10TV Note
+
+Forked to add linkify-it mention support. All mention hrefs are hardcoded to 'tc://users/{username}'
+
 ## Examples
 
 Live examples are available at [http://tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
